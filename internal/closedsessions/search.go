@@ -14,9 +14,12 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-const sessionPrefix = "restore-session-"
+const (
+	sessionPrefix      = "restore-session-"
+	autoSessionPrefix  = "restore-session-auto-"
+)
 
-var restoreSessionPattern = regexp.MustCompile(`^restore-session-(\d{8})(.*)$`)
+var restoreSessionPattern = regexp.MustCompile(`^(?:restore-session-auto-|restore-session-)(\d{8})(.*)$`)
 
 // Result is a relative path split into directory and filename components.
 type Result struct {
@@ -51,7 +54,7 @@ func Search(basePath, dateArg string) ([]Result, error) {
 		}
 
 		name := entry.Name()
-		if !strings.HasPrefix(name, sessionPrefix) {
+		if !strings.HasPrefix(name, sessionPrefix) && !strings.HasPrefix(name, autoSessionPrefix) {
 			return nil
 		}
 

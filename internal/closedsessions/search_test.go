@@ -49,6 +49,7 @@ func TestSearchMatchesNestedPaths(t *testing.T) {
 		filepath.Join(base, "nested", "archive", "restore-session-20250409.log"),
 		filepath.Join(base, "other", "restore-session-20250411.zip"),
 		filepath.Join(base, "ignore", "restore-session-20250301.txt"),
+		filepath.Join(base, "nested", "restore-session-auto-20250410.txt"),
 	}
 	if err := os.MkdirAll(filepath.Join(base, "other"), 0o755); err != nil {
 		t.Fatalf("creating other directory: %v", err)
@@ -66,8 +67,8 @@ func TestSearchMatchesNestedPaths(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Search returned error: %v", err)
 	}
-	if len(results) != 1 {
-		t.Fatalf("expected 1 match, got %d", len(results))
+	if len(results) != 2 {
+		t.Fatalf("expected 2 matches, got %d", len(results))
 	}
 	if results[0].Directory != "nested" {
 		t.Fatalf("expected directory nested, got %q", results[0].Directory)
@@ -75,7 +76,9 @@ func TestSearchMatchesNestedPaths(t *testing.T) {
 	if results[0].Filename != "restore-session-20250410.txt" {
 		t.Fatalf("expected filename restore-session-20250410.txt, got %q", results[0].Filename)
 	}
-
+	if results[1].Filename != "restore-session-auto-20250410.txt" {
+		t.Fatalf("expected filename restore-session-auto-20250410.txt, got %q", results[1].Filename)
+	}
 }
 
 func TestLoadConfigCreatesDefaultFile(t *testing.T) {
